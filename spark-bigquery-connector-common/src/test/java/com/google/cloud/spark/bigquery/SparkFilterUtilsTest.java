@@ -187,12 +187,12 @@ public class SparkFilterUtilsTest {
         .isEqualTo("`foo` IS NOT NULL");
     assertThat(
             SparkFilterUtils.compileFilter(And.apply(IsNull.apply("foo"), IsNotNull.apply("bar"))))
-        .isEqualTo("((`foo` IS NULL) AND (`bar` IS NOT NULL))");
+        .isEqualTo("(`foo` IS NULL) AND (`bar` IS NOT NULL)");
     assertThat(
             SparkFilterUtils.compileFilter(Or.apply(IsNull.apply("foo"), IsNotNull.apply("bar"))))
-        .isEqualTo("((`foo` IS NULL) OR (`bar` IS NOT NULL))");
+        .isEqualTo("(`foo` IS NULL) OR (`bar` IS NOT NULL)");
     assertThat(SparkFilterUtils.compileFilter(Not.apply(IsNull.apply("foo"))))
-        .isEqualTo("(NOT (`foo` IS NULL))");
+        .isEqualTo("NOT (`foo` IS NULL)");
   }
 
   @Test
@@ -261,9 +261,9 @@ public class SparkFilterUtilsTest {
         pushAllFilters,
         dataFormat,
         "",
-        "(((((`c1` >= 100) OR (`c1` <= 700))) OR (`c2` <= 900)) "
-            + "AND ((((`c1` >= 500) OR (`c1` <= 70))) OR (((`c1` >= 900) OR "
-            + "(`c3` <= 50)))) AND ((`c1` >= 5000) OR (`c1` <= 701)))",
+        "(((`c1` >= 100) OR (`c1` <= 700)) OR (`c2` <= 900)) "
+            + "AND (((`c1` >= 500) OR (`c1` <= 70)) OR ((`c1` >= 900) OR "
+            + "(`c3` <= 50))) AND ((`c1` >= 5000) OR (`c1` <= 701))",
         Optional.empty(),
         part1,
         part2,
@@ -289,7 +289,7 @@ public class SparkFilterUtilsTest {
         pushAllFilters,
         dataFormat,
         "",
-        "(((((`c1` >= 500) AND (`c2` <= 300))) OR (((`c1` <= 800) AND (`c3` >= 230)))))",
+        "(((`c1` >= 500) AND (`c2` <= 300)) OR ((`c1` <= 800) AND (`c3` >= 230)))",
         Optional.empty(),
         filter);
   }
@@ -329,11 +329,11 @@ public class SparkFilterUtilsTest {
         pushAllFilters,
         dataFormat,
         "",
-        "(((((((`c1` >= 5000) OR (`c1` <= 701))) AND "
-            + "(((`c2` >= 150) OR (`c3` >= 100))))) OR (((((`c1` >= 50) OR "
-            + "(`c1` <= 71))) AND (((`c2` >= 15) OR (`c3` >= 10)))))) AND "
+        "((((`c1` >= 5000) OR (`c1` <= 701)) AND "
+            + "((`c2` >= 150) OR (`c3` >= 100))) OR (((`c1` >= 50) OR "
+            + "(`c1` <= 71)) AND ((`c2` >= 15) OR (`c3` >= 10)))) AND "
             + "((`c1` >= 500) OR (`c1` <= 70)) AND ((`c1` >= 900) OR "
-            + "(((`c3` <= 50) AND (((`c2` >= 20) OR (`c3` > 200)))))))",
+            + "((`c3` <= 50) AND ((`c2` >= 20) OR (`c3` > 200))))",
         Optional.empty(),
         part1,
         part2,
